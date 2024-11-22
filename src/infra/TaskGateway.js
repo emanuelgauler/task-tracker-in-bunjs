@@ -1,5 +1,6 @@
 import { file, write } from "bun";
 import { join } from "path/posix";
+import { error } from 'console'
 
 const TASKS_PATH = join(process.cwd(), "tasks.json"); // Replace with your actual path to your tasks file
 
@@ -46,6 +47,18 @@ export class TaskGateway {
             await write(TaskGateway.tasks_file, JSON.stringify(this.tasks));
         } else {
             throw new Error("task not found", { cause: "TaskNotFound" });
+        }
+    }
+
+    async change_description_to( id, description ) {
+        const task = this.tasks.find(e => e.id == id)
+        if (task) {
+            task.description = description
+            task.updated_at = new Date()
+            await write(TaskGateway.tasks_file, JSON.stringify(this.tasks))
+        } else {
+            error("[GATEWAY]", task)
+            throw new Error("task not found", { cause: "TaskNotFound" })
         }
     }
 }

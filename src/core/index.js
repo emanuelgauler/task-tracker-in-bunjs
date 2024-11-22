@@ -41,3 +41,13 @@ export async function mark_task_as(status, id) {
         error("[TASKS SERVICE] >>", err)
     }
 }
+
+export async function update_task_with(description, id) {
+    try {
+        const gateway = await TaskGateway.init()
+        await gateway.change_description_to( id, description )
+    } catch (err) {
+        error("[TASKS SERVICE] >>", err)
+        throw err
+    }
+}

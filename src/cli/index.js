@@ -1,6 +1,6 @@
 import { argv, color } from 'bun'
 import { log, error } from 'console'
-import { add_task_with, get_all_tasks, mark_task_as } from '../core'
+import { add_task_with, get_all_tasks, mark_task_as, update_task_with } from '../core'
 
 function success(...args) {
     log('\x1b[37;42m%s\x1b[0m',...args)
@@ -69,7 +69,7 @@ const commands = [{
     , handler: async (...params) => {
         try {
             const [ description, task_id ] = params.flat()
-            await update_task_with(description, task_id)
+            await update_task_with(description, task_id.toUpperCase())
         } catch (err) {
             error("TASKS CLI: ", err)
         }
