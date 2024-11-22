@@ -11,7 +11,7 @@ const commands = [{
     , description: 'Add a task with a description, and return its ID'
     , handler: async (...params) => {
         try {
-            const [ description ] = params
+            const [ description ] = params.flat()
             const { id } = await add_task_with(description)
             success(`>> adding task: ${description} with ID ${id}`)
         } catch (err) {
@@ -39,6 +39,17 @@ const commands = [{
         try {
             const [ task_id ] = params.flat()
             await mark_task_as('in-progress', task_id)
+        } catch (err) {
+            error("TASKS CLI: ", err)
+        }
+    }
+}, {
+    name: 'mark-done'
+    , description: 'Mark a task as done by its ID'
+    , handler: async (...params) => {
+        try {
+            const [ task_id ] = params.flat()
+            await mark_task_as('done', task_id)
         } catch (err) {
             error("TASKS CLI: ", err)
         }
