@@ -107,7 +107,7 @@ const commands = [{
     }
 }]
 
-const command = argv[2] || "list"
+const command = argv[2] || "help"
 
 try {
     commands
