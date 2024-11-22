@@ -1,0 +1,11 @@
+{
+  "name": "task-tracker",
+  "module": "src/cli/index.js",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
