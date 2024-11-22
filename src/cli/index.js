@@ -1,6 +1,6 @@
 import { argv } from 'bun'
 import { log, error } from 'console'
-import { add_task_with, get_all_tasks } from '../core'
+import { add_task_with, get_all_tasks, mark_task_as } from '../core'
 
 function success(...args) {
     log('\x1b[32m%s\x1b[0m',...args)
@@ -32,10 +32,25 @@ const commands = [{
             error(err)
         }
     }
+}, {
+    name: 'mark-in-progress'
+    , description: 'Mark a task as in-progress by its ID'
+    , handler: async (...params) => {
+        try {
+            const [ task_id ] = params.flat()
+            await mark_task_as('in-progress', task_id)
+        } catch (err) {
+            error("TASKS CLI: ", err)
+        }
+    }
 }]
 
 const command = argv[2] || "list"
 
-commands
-    .find(({ name }) => name === command)
-    .handler(argv.splice(3))
+try {
+    commands
+        .find(({ name }) => name === command)
+        .handler(argv.splice(3))
+} catch (err) {
+    error(">> command not found")
+}

@@ -1,6 +1,6 @@
 import { file, write } from "bun"
 import { join } from 'path'
-import { log } from 'console'
+import { error, log } from 'console'
 
 const TASKS_PATH = join(process.cwd(), "tasks.json") // Replace with your actual path to your tasks file
 
@@ -24,6 +24,10 @@ class TaskGateway {
         this.tasks = tasks || []
     }
 
+    find_by(id) {
+        return this.tasks.find( e => e.id == id )
+    }
+
     async find_from(filter) {
         // Implementation here
         // This function should connect to your database, fetch tasks that match the given filter, and return them
@@ -34,8 +38,26 @@ class TaskGateway {
         this.tasks.push( task )
         await write( TaskGateway.tasks_file, JSON.stringify(this.tasks))
     }
+
+    async mark( status, id ) {
+        const task = this.tasks.find( e => e.id == id )
+        if( task ) {
+            task.status = status
+            task.updated_at = new Date()
+            await write( TaskGateway.tasks_file, JSON.stringify(this.tasks))
+        } else {
+            throw new Error("task not found", { cause: "TaskNotFound" })
+        }
+    }
 }
 const gateway = await TaskGateway.init()
+
+function id_generator() {
+    return Math.floor(Math.random() * 10 ** 7)
+        .toString(36)
+        .padStart(5, "0")
+        .toUpperCase()
+}
 
 export async function get_all_tasks(...params) {
     // Implementation here
@@ -59,9 +81,11 @@ export async function add_task_with( description ) {
     return new_task
 }
 
-function id_generator() {
-    return Math.floor(Math.random() * 10 ** 7)
-        .toString(36)
-        .padStart(5, "0")
-        .toUpperCase()
+export async function mark_task_as(status, id) {
+    try {
+        const gateway = await TaskGateway.init()
+        await gateway.mark( status, id.toUpperCase() )
+    } catch (err) {
+        error("[TASKS SERVICE] >>", err)
+    }
 }
