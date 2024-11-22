@@ -6,9 +6,9 @@ function success(...args) {
     log('\x1b[37;42m%s\x1b[0m',...args)
 }
 
-
 const commands = [{
     name: 'add'
+    , args: "<description>"
     , description: 'Add a task with a description, and return its ID'
     , handler: async (...params) => {
         try {
@@ -21,7 +21,8 @@ const commands = [{
     }
 }, {
     name: 'list'
-    , description: 'List all tasks'
+    , description: 'List all tasks from filter, default all'
+    , args: '[done | in-progress | todo | all]'
     , handler: async (...params) => {
         try {
             const tasks = await get_all_tasks(params)
@@ -43,6 +44,7 @@ const commands = [{
     }
 }, {
     name: 'mark-in-progress'
+    , args: '<ID>'
     , description: 'Mark a task as in-progress by its ID'
     , handler: async (...params) => {
         try {
@@ -55,6 +57,7 @@ const commands = [{
 }, {
     name: 'mark-done'
     , description: 'Mark a task as done by its ID'
+    , args: '<ID>'
     , handler: async (...params) => {
         try {
             const [ task_id ] = params.flat()
@@ -66,6 +69,7 @@ const commands = [{
 }, {
     name: 'update'
     , description: 'Update a task by its ID with a new description'
+    , args: '<new description> <ID>'
     , handler: async (...params) => {
         try {
             const [ description, task_id ] = params.flat()
@@ -76,6 +80,7 @@ const commands = [{
     }
 }, {
     name: 'delete'
+    , args: '<ID>'
     , description: 'Delete a task by its ID'
     , handler: async (...params) => {
         try {
@@ -83,6 +88,21 @@ const commands = [{
             await delete_task_with_id( task_id )
         } catch (err) {
             error("TASKS CLI: ", err)
+        }
+    }
+}, {
+    name: 'help'
+    , args: '[command]'
+    , description: 'Show help message'
+    , handler: (params) => {
+        const [ command ] = params.flat()
+        if( command ) {
+            const { description, args } = commands.find(({ name }) => command == name )
+            log("task-tracker: Usage:")
+            log(command, args,"\t\t", description )
+        } else {
+            log("Available commands:")
+            commands.forEach(({ name, description }) => log(`  ${name}\t\t\t\t ${description}`))
         }
     }
 }]
@@ -95,4 +115,5 @@ try {
         .handler(argv.splice(3))
 } catch (err) {
     error(">> command not found")
+    error(err)
 }
