@@ -102,7 +102,7 @@ const commands = [{
             log(command, args,"\t\t", description )
         } else {
             log("Available commands:")
-            commands.forEach(({ name, description }) => log(`  ${name}\t\t\t\t ${description}`))
+            commands.forEach(({ name, args, description }) => log(`  ${name} ${args}\t\t\t\t ${description}`))
         }
     }
 }]
