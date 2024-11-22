@@ -1,10 +1,11 @@
-import { argv } from 'bun'
+import { argv, color } from 'bun'
 import { log, error } from 'console'
 import { add_task_with, get_all_tasks, mark_task_as } from '../core'
 
 function success(...args) {
-    log('\x1b[32m%s\x1b[0m',...args)
+    log('\x1b[37;42m%s\x1b[0m',...args)
 }
+
 
 const commands = [{
     name: 'add'
@@ -24,8 +25,16 @@ const commands = [{
     , handler: async (...params) => {
         try {
             const tasks = await get_all_tasks(params)
-            if( 0 < tasks.length )
-                tasks.forEach(task => log(`>> ${task.id}: ${task.description}`))
+            if (0 < tasks.length)
+                tasks.forEach(task => {
+                    const line = `>> ${task.id}: ${task.description}` 
+                    if( task.status == 'done' )
+                        log('\x1b[37;105m%s\x1b[0m', line)
+                    else if( task.status == 'in-progress' ) 
+                        log('\x1b[37;42m%s\x1b[0m', line )
+                    else 
+                        log('\x1b[30;43m%s\x1b[0m', line)
+                })
             else
                 log("No tasks found")
         } catch (err) {
