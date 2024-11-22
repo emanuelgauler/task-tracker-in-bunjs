@@ -63,6 +63,17 @@ const commands = [{
             error("TASKS CLI: ", err)
         }
     }
+}, {
+    name: 'update'
+    , description: 'Update a task by its ID with a new description'
+    , handler: async (...params) => {
+        try {
+            const [ description, task_id ] = params.flat()
+            await update_task_with(description, task_id)
+        } catch (err) {
+            error("TASKS CLI: ", err)
+        }
+    }
 }]
 
 const command = argv[2] || "list"
