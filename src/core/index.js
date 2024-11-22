@@ -5,17 +5,17 @@ import { log } from 'console'
 const TASKS_PATH = join(process.cwd(), "tasks.json") // Replace with your actual path to your tasks file
 
 class TaskGateway {
+    static tasks_file = file(TASKS_PATH, { type: 'application/json' })
     static async init() {
         // Connect to your database here
         // Return an instance of your TaskGateway class
-        const tasks_file = file(TASKS_PATH, { type: 'application/json' })
-        const exists = await tasks_file.exists()
+        const exists = await this.tasks_file.exists()
         if( exists ) {
-            const content = await tasks_file.json()
+            const content = await this.tasks_file.json()
             return new TaskGateway(content)
         } else {
             const content = []
-            await write(tasks_file, JSON.stringify(content))
+            await write(this.tasks_file, JSON.stringify(content))
             return new TaskGateway(content)
         }
     }
@@ -29,6 +29,11 @@ class TaskGateway {
         // This function should connect to your database, fetch tasks that match the given filter, and return them
         return this.tasks.filter(task => task.status.includes(filter))
     }
+
+    async insert( task ) {
+        this.tasks.push( task )
+        await write( TaskGateway.tasks_file, JSON.stringify(this.tasks))
+    }
 }
 const gateway = await TaskGateway.init()
 
@@ -37,4 +42,26 @@ export async function get_all_tasks(...params) {
     // This function should connect to your database, fetch all tasks, and return them
     const [ filter ] = params
     return await gateway.find_from( filter )
+}
+
+export async function add_task_with( description ) {
+    // Implementation here
+    // This function should connect to your database, add a new task with the given description, and return the new task's ID
+    const today = new Date()
+    const new_task = {
+        id: id_generator()
+        , description
+        , status: "in-progress"
+        , created_at: today
+        , updated_at: today
+    }
+    gateway.insert( new_task )
+    return new_task
+}
+
+function id_generator() {
+    return Math.floor(Math.random() * 10 ** 7)
+        .toString(36)
+        .padStart(5, "0")
+        .toUpperCase()
 }
