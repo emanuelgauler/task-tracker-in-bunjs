@@ -51,3 +51,13 @@ export async function update_task_with(description, id) {
         throw err
     }
 }
+
+export async function delete_task_with_id( id ) {
+    try {
+        const gateway = await TaskGateway.init()
+        await gateway.delete_task( id.toUpperCase() )
+    } catch (err) {
+        error("[TASKS SERVICE] >>", err)
+        throw err
+    }
+}

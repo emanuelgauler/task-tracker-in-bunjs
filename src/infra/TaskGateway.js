@@ -61,4 +61,9 @@ export class TaskGateway {
             throw new Error("task not found", { cause: "TaskNotFound" })
         }
     }
+
+    async delete_task(id) {
+        this.tasks = this.tasks.filter(e => e.id!= id);
+        await write(TaskGateway.tasks_file, JSON.stringify(this.tasks));
+    }
 }

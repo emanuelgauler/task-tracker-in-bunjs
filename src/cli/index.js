@@ -1,6 +1,6 @@
 import { argv, color } from 'bun'
 import { log, error } from 'console'
-import { add_task_with, get_all_tasks, mark_task_as, update_task_with } from '../core'
+import { add_task_with, delete_task_with_id, get_all_tasks, mark_task_as, update_task_with } from '../core'
 
 function success(...args) {
     log('\x1b[37;42m%s\x1b[0m',...args)
@@ -70,6 +70,17 @@ const commands = [{
         try {
             const [ description, task_id ] = params.flat()
             await update_task_with(description, task_id.toUpperCase())
+        } catch (err) {
+            error("TASKS CLI: ", err)
+        }
+    }
+}, {
+    name: 'delete'
+    , description: 'Delete a task by its ID'
+    , handler: async (...params) => {
+        try {
+            const [ task_id ] = params.flat()
+            await delete_task_with_id( task_id )
         } catch (err) {
             error("TASKS CLI: ", err)
         }
