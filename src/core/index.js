@@ -51,7 +51,7 @@ export async function add_task_with( description ) {
     const new_task = {
         id: id_generator()
         , description
-        , status: "in-progress"
+        , status: "todo"
         , created_at: today
         , updated_at: today
     }

@@ -23,7 +23,7 @@ const commands = [{
     , description: 'List all tasks'
     , handler: async (...params) => {
         try {
-            const tasks = await get_all_tasks()
+            const tasks = await get_all_tasks(params)
             if( 0 < tasks.length )
                 tasks.forEach(task => log(`>> ${task.id}: ${task.description}`))
             else
