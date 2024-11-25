@@ -176,3 +176,6 @@ dist
 
 # File JSON with tasks
 tasks.json
+
+# file builded from setup
+task-tracker

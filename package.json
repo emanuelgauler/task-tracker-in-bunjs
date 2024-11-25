@@ -9,6 +9,7 @@
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "dev": "bun run src/cli/index.js"
+    "dev": "bun run src/cli/index.js",
+    "setup": "bun build src/**/*.js --compile --outfile task-tracker"
   }
 }

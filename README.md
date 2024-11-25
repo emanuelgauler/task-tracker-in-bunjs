@@ -17,42 +17,43 @@ To install dependencies:
 
 ```bash
 bun install
+bun run setup
 ```
 
 To deploy help:
 
 ```bash
-bun src/cli/index.js
+./task-tracker
 ```
 To add a new task
 ```
-bun src/cli/index.js add "description of the task"
+./task-tracker add "description of the task"
 ```
 To list all tasks
 ```
-bun src/cli/index.js list
+./task-tracker list
 ```
 To change the description
 ```
-bun src/cli/index.js update "new description" id
+./task-tracker update "new description" id
 ```
 To mark as _in-progress_ a task
 ```
-bun src/cli/index.js mark-in-progress id
+./task-tracker mark-in-progress id
 ```
 To mark as _done_ a task
 ```
-bun src/cli/index.js mark-done id
+./task-tracker mark-done id
 ```
 To delete a task
 ```
-bun src/cli/index.js delete id
+./task-tracker delete id
 ```
 To list all tasks is in-progress
 ```
-bun src/cli/index.js list in-progress
+./task-tracker list in-progress
 ```
 To list all tasks is done
 ```
-bun src/cli/index.js list done
+./task-tracker list done
 ```
